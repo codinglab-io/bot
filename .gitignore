@@ -1,0 +1,13 @@
+# IDEs
+.idea/
+.vscode/
+
+# Node
+node_modules/
+
+# Typescript
+build/
+*.tsbuildinfo
+
+# Logs
+*.log
