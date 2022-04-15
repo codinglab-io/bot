@@ -1,9 +1,14 @@
-import { Client, Intents } from 'discord.js';
-import * as env from 'env-var';
+import { Client, Intents } from "discord.js";
+import * as env from "env-var";
 
-const TOKEN = env.get('DISCORD_TOKEN').required().asString();
+const main = async () => {
+  const TOKEN = env.get("DISCORD_TOKEN").required().asString();
 
-const bot = new Client({ intents: [Intents.FLAGS.GUILDS] });
+  const bot = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
-bot.once('ready', () => console.log('Ready!'));
-bot.login(TOKEN);
+  bot.once("ready", () => console.log("Ready!"));
+
+  await bot.login(TOKEN);
+};
+
+void main();
