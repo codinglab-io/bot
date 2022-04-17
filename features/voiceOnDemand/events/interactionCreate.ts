@@ -1,63 +1,13 @@
 import type {
   CacheType,
-  Client,
-  GuildChannelManager,
   Interaction,
 } from 'discord.js';
-import { getVoiceConnection } from '@discordjs/voice';
-import { getRootChannelId, setRootChannelId } from '..';
+import { createVoiceChannel, getRootChannelId, prefixChannel, setRootChannelId } from '..';
 
-const getCustomVoiceChannels = (client: Client) => {
-  const channels = client.channels.cache.filter((channel) => {
-    return channel.type === 'GUILD_VOICE' && channel.name.includes('@CL');
-  });
-
-  return channels;
-};
-
-const createVoiceChannel = async (
-  channelManager: GuildChannelManager,
-  channelName: string,
-  parentId?: string
-) => {
-  try {
-    const channel = await channelManager.create(channelName, {
-      type: 'GUILD_VOICE',
-      ...(parentId && { parent: parentId }),
-    });
-    return channel;
-  } catch (error) {
-    console.log('Error creating channel: ', error);
-    return null;
-  }
-};
-
-export default async (bot: Client, interaction: Interaction<CacheType>) => {
+export default async (interaction: Interaction<CacheType>) => {
   if (!interaction.isCommand()) return;
 
   const { commandName } = interaction;
-
-  if (commandName === 'disconnect') {
-    const connection = getVoiceConnection(
-      interaction.guild ? interaction.guild.id : ''
-    );
-    if (connection) connection.destroy();
-    await interaction.reply({ content: `Disconnected!`, ephemeral: true });
-    return;
-  }
-
-  if (commandName === 'clean') {
-    const channels = getCustomVoiceChannels(bot);
-    const promises: any[] = channels.map((channel) => channel.delete());
-
-    await Promise.all(promises);
-    await interaction.reply({
-      content: `Cleaned successfully!`,
-      ephemeral: true,
-    });
-
-    return;
-  }
 
   if (commandName === 'createrootchannel') {
     const rootChannelId = getRootChannelId();
@@ -77,7 +27,7 @@ export default async (bot: Client, interaction: Interaction<CacheType>) => {
 
     const channel = await createVoiceChannel(
       channelManager,
-      `@CL ${nameChannel}`,
+      `${prefixChannel} ${nameChannel}`,
       channelDestination?.id
     );
 

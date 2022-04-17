@@ -1,5 +1,5 @@
-import type { Client, GuildChannelManager, VoiceState } from 'discord.js';
-import { getRootChannelId, voiceChannels } from '..';
+import type { Client, VoiceState } from 'discord.js';
+import { createVoiceChannel, getRootChannelId, prefixChannel, voiceChannels } from '..';
 
 const getConnectedMembersCount = (client: Client, channelId: string) => {
   const channel = client.channels.cache.get(channelId);
@@ -20,23 +20,6 @@ const isUserTheOwner = (userId: string, channelId: string) => {
 
   if (isOwner) return true;
   return false;
-};
-
-const createVoiceChannel = async (
-  channelManager: GuildChannelManager,
-  channelName: string,
-  parentId?: string
-) => {
-  try {
-    const channel = await channelManager.create(channelName, {
-      type: 'GUILD_VOICE',
-      ...(parentId && { parent: parentId }),
-    });
-    return channel;
-  } catch (error) {
-    console.log('Error creating channel: ', error);
-    return null;
-  }
 };
 
 const getLastChannelPosition = () => {
@@ -95,7 +78,7 @@ export default async (
   if (rootChannelId && rootChannelId === newChannelId) {
     const parentId = newUserState.channel?.parentId || '';
     const position = getLastChannelPosition();
-    const nameChannel = '@CL-Channel #' + position;
+    const nameChannel = `${prefixChannel}-Channel #` + position;
 
     const channel = await createVoiceChannel(
       guildChannelManager,
