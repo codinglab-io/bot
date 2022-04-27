@@ -1,4 +1,4 @@
-import type { Client, VoiceState } from 'discord.js';
+import type { Client, VoiceState, GuildChannelManager } from 'discord.js';
 import { createVoiceChannel, getRootChannelId, prefixChannel, voiceChannels } from '..';
 
 const getConnectedMembersCount = (client: Client, channelId: string) => {
@@ -62,6 +62,31 @@ const isCustomChannel = (channelId: string) => {
   return false;
 };
 
+const createCustomVoiceChannel = async (userState: VoiceState, guildChannelManager: GuildChannelManager, ownerId: string) => {
+  const parentId = userState.channel?.parentId || '';
+  const position = getLastChannelPosition();
+  const nameChannel = `${prefixChannel}-Channel #` + position;
+
+  const channel = await createVoiceChannel(
+    guildChannelManager,
+    nameChannel,
+    parentId
+  );
+  if (channel) {
+    voiceChannels.push({
+      id: channel.id,
+      position: position.toString(),
+      name: nameChannel,
+      ownerId: ownerId,
+    });
+
+    console.log('Just created channel');
+    userState.setChannel(channel);
+  } else {
+    console.log('Error when creating channel');
+  }
+}
+
 export default async (
   bot: Client,
   oldUserState: VoiceState,
@@ -76,28 +101,7 @@ export default async (
   const rootChannelId = getRootChannelId();
   // channelCreation
   if (rootChannelId && rootChannelId === newChannelId) {
-    const parentId = newUserState.channel?.parentId || '';
-    const position = getLastChannelPosition();
-    const nameChannel = `${prefixChannel}-Channel #` + position;
-
-    const channel = await createVoiceChannel(
-      guildChannelManager,
-      nameChannel,
-      parentId
-    );
-    if (channel) {
-      voiceChannels.push({
-        id: channel.id,
-        position: position.toString(),
-        name: nameChannel,
-        ownerId: userId,
-      });
-
-      console.log('Just created channel');
-      newUserState.setChannel(channel);
-    } else {
-      console.log('Error when creating channel');
-    }
+    createCustomVoiceChannel(newUserState, guildChannelManager, userId);
   }
 
   console.log(
