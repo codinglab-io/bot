@@ -10,6 +10,7 @@
     "module": "CommonJS",
     "noErrorTruncation": true,
     "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noPropertyAccessFromIndexSignature": true,
