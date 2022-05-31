@@ -1,5 +1,5 @@
 import type { DMChannel, NonThreadGuildBasedChannel } from 'discord.js';
-import { getRootChannelId, setRootChannelId, voiceChannels } from '..';
+import { getRootChannelId, setRootChannelId, voiceChannels } from '../index';
 
 export default async (channel: DMChannel | NonThreadGuildBasedChannel) => {
   if (channel.type !== 'GUILD_VOICE') return;
