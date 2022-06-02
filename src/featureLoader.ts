@@ -1,13 +1,17 @@
 import type { Client } from 'discord.js';
 import { readdir, stat } from 'fs/promises';
 import { join, resolve } from 'path';
+import { sendSlashCommands } from './deployCommands';
+import type { SlashCommandBuilder } from '@discordjs/builders';
 
-const rootFeatureFolder = join(__dirname, './features');
+const rootFeatureFolder = join(__dirname, '/features');
+const commandsFileName = 'commands';
 
 const loadFeatures = async (bot: Client) => {
   if (!bot) throw new Error('Bot is not defined');
 
   const featurePaths = await readdir(rootFeatureFolder);
+  const commandsToSend: SlashCommandBuilder[] = [];
 
   const features = featurePaths.map(async (featureName) => {
     const fullPath = join(rootFeatureFolder, featureName);
@@ -18,10 +22,19 @@ const loadFeatures = async (bot: Client) => {
 
     console.log(`Loading feature ${featureName}`);
     const { default: feature } = await import(resolve(fullPath));
+    const { default: commands } = await import(
+      resolve(join(fullPath, commandsFileName))
+    );
+
+    commandsToSend.push(...commands);
+
     return feature(bot);
   });
 
-  return Promise.all(features);
+  const status = await Promise.all(features);
+  await sendSlashCommands(commandsToSend);
+
+  return status;
 };
 
 export { loadFeatures };

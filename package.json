@@ -5,8 +5,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node build/index.js",
-    "dev": "ts-node -r dotenv/config ./src/index.ts",
-    "deployCommands": "ts-node -r dotenv/config ./src/deployCommands.ts"
+    "dev": "ts-node -r dotenv/config ./src/index.ts"
   },
   "keywords": [],
   "author": "codinglab",
