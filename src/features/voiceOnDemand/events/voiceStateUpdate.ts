@@ -1,5 +1,5 @@
 import type { Client, VoiceState, GuildChannelManager } from 'discord.js';
-import { createVoiceChannel, getRootChannelId, prefixChannel, voiceChannels } from '..';
+import { createVoiceChannel, getRootChannelId, prefixChannel, voiceChannels } from '../index';
 
 const getConnectedMembersCount = (client: Client, channelId: string) => {
   const channel = client.channels.cache.get(channelId);

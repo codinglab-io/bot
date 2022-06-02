@@ -2,7 +2,7 @@ import type {
   CacheType,
   Interaction,
 } from 'discord.js';
-import { createVoiceChannel, getRootChannelId, prefixChannel, setRootChannelId } from '..';
+import { createVoiceChannel, getRootChannelId, prefixChannel, setRootChannelId } from '../index';
 
 export default async (interaction: Interaction<CacheType>) => {
   if (!interaction.isCommand()) return;
