@@ -4,7 +4,7 @@ import { REST } from '@discordjs/rest';
 import * as env from 'env-var';
 
 const TOKEN = env.get('DISCORD_TOKEN').required().asString();
-const CLIENTID = env.get('CLIENTID').required().asString();
+const CLIENTID = env.get('CLIENT_ID').required().asString();
 const rest = new REST({ version: '9' }).setToken(TOKEN);
 
 export const sendSlashCommands = async (commands: SlashCommandBuilder[]) => {
