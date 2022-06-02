@@ -2,7 +2,7 @@ import type { Client } from 'discord.js';
 import { readdir, stat } from 'fs/promises';
 import { join, resolve } from 'path';
 
-const rootFeatureFolder = './features';
+const rootFeatureFolder = join(__dirname, './features');
 
 const loadFeatures = async (bot: Client) => {
   if (!bot) throw new Error('Bot is not defined');
