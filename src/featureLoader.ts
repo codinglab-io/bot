@@ -1,6 +1,7 @@
 import type { Client } from 'discord.js';
 import { readdir, stat } from 'fs/promises';
 import { join, resolve } from 'path';
+import { sendSlashCommands } from './deployCommands';
 import type { SlashCommandBuilder } from '@discordjs/builders';
 
 const rootFeatureFolder = join(__dirname, '/features');
@@ -31,6 +32,7 @@ const loadFeatures = async (bot: Client) => {
   });
 
   const status = await Promise.all(features);
+  await sendSlashCommands(commandsToSend);
 
   return status;
 };
